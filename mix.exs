@@ -1,11 +1,11 @@
-defmodule LibclusterGae.MixProject do
+defmodule ClusterGCE.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :libcluster_gae,
+      app: :libcluster_gce,
       description: "",
-      version: "0.1.2",
+      version: "0.0.1",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -29,23 +29,23 @@ defmodule LibclusterGae.MixProject do
   defp package do
     [
       files: ["lib", "mix.exs", "LICENSE", "README.md"],
-      maintainers: ["Alex Garibay"],
+      maintainers: ["Alex Kwiatkowski"],
       licenses: ["MIT"],
-      links: %{"GitHub" => source_url()}
+      links: %{"GitHub" => "https://github.com/fremantle-industries/libcluster_gce"}
     ]
   end
-  # Run "mix help compile.app" to learn about applications.
+
   def application do
     [
       extra_applications: [:logger]
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :dev},
-      {:libcluster, "~> 3.0"}
+      {:libcluster, "~> 3.0"},
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 end

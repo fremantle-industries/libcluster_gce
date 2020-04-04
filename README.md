@@ -1,41 +1,43 @@
-This library is a strategy for `libcluster` for connecting nodes in Google App Engine. If you're unfamiliar with `libcluster`, please read the [documentation](https://github.com/bitwalker/libcluster).
+# LibclusterGCE
+[![Build Status](https://github.com/fremantle-industries/libcluster_gce/workflows/Test/badge.svg?branch=master)](https://github.com/fremantle-industries/libcluster_gce/actions?query=workflow%3ATest)
+[![hex.pm version](https://img.shields.io/hexpm/v/libcluster_gce.svg?style=flat)](https://hex.pm/packages/libcluster_gce)
 
-This library makes the assumption that the elixir application is using [Distillery](https://github.com/bitwalker/distillery) releases.
+This is a Google Compute Engine (GCE) clustering strategy for [libcluster](https://hexdocs.pm/libcluster/readme.html). 
+It currently supports identifying nodes based on compute engine labels.
 
 ## Installation
 
-Add `:libcluster_gae` to your project's mix dependencies.
+Add `:libcluster_gce` to your project's mix dependencies.
 
 ```elixir
 def deps do
   [
-    {:libcluster_gae, "~> 0.1"}
+    {:libcluster_gce, "~> 0.0.1"}
   ]
 end
 ```
 
 ## Deployment Assumptions
 
-Clustering will only apply to nodes that are configured to receive HTTP traffic in App Engine are currently running and belong to the same service. If this doesn't fit your deployment strategy, please open a Github issue describing your deployment configuration.
+Clustering will only apply to nodes that are accessible via the [GCP internal DNS](https://cloud.google.com/compute/docs/internal-dns).
+If this doesn't fit your deployment strategy, please open a Github issue describing your deployment configuration.
 
 ## Configuration
 
-### Google Cloud
-
-Before clustering can work, enable the **App Engine Admin API** for your application's Google Cloud Project. Follow the guide on [enabling APIs](https://cloud.google.com/apis/docs/enable-disable-apis).
-
-![Video demonstrating how to enable the App Engine Admin API](https://i.imgur.com/jBhOGYG.gif)
-
-### Elixir Application
-
-To cluster an application running in Google App Engine, define a topology for `libcluster`.
+To cluster an application running in Google Compute Engine, define a topology for `libcluster`.
 
 ```elixir
 # config.exs
 config :libcluster,
   topologies: [
     my_app: [
-      strategy: Cluster.Strategy.GoogleAppEngine
+      strategy: ClusterGCE.Strategy.Labels,
+      config: [
+        project: "my-project",
+        labels: %{
+          "env" => "prod"
+        }
+      ]
     ]
   ]
 ```
@@ -62,25 +64,26 @@ Update your release's `vm.args` file to include the following lines.
 
 ```
 ## Name of the node
--name <%= release_name%>@${GAE_INSTANCE}.c.${GOOGLE_CLOUD_PROJECT}.internal
+-name <%= release_name%>@${GOOGLE_COMPUTE_ENGINE_INSTANCE}.${GOOGLE_COMPUTE_ENGINE_ZONE}.c.${GOOGLE_CLOUD_PROJECT}.internal
 
 ## Limit distributed erlang ports to a single port
 -kernel inet_dist_listen_min 9999
 -kernel inet_dist_listen_max 9999
 ```
 
-Update the `app.yaml` configuration file for Google App Engine.
+Run your application with the environment variable `REPLACE_OS_VARS=true` and forward the following tcp ports:
 
-```yaml
-env_variables:
-  REPLACE_OS_VARS: true
+- `4369 # epmd`
+- `9999 # erlang distribution`
 
-network:
-  forwarded_ports:
-    # epmd
-    - 4369
-    # erlang distribution
-    - 9999
-```
+## Thanks
 
-Now run `gcloud app deploy` and enjoy clustering on GAE!
+Shout out to [@alexgaribay](https://github.com/alexgaribay) for the hard work in [libcluster_gae](https://github.com/alexgaribay/libcluster_gae).
+
+## Authors
+
+* Alex Kwiatkowski - alex+git@fremantle.io
+
+## License
+
+`libcluster_gce` is released under the [MIT license](./LICENSE.md)
