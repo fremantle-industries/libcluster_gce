@@ -1,5 +1,5 @@
 # LibclusterGCE
-[![Build Status](https://github.com/fremantle-industries/libcluster_gce/workflows/Test/badge.svg?branch=main)](https://github.com/fremantle-industries/libcluster_gce/actions?query=workflow%3ATest)
+[![Build Status](https://github.com/fremantle-industries/libcluster_gce/workflows/test/badge.svg?branch=main)](https://github.com/fremantle-industries/libcluster_gce/actions?query=workflow%3Atest)
 [![hex.pm version](https://img.shields.io/hexpm/v/libcluster_gce.svg?style=flat)](https://hex.pm/packages/libcluster_gce)
 
 This is a Google Compute Engine (GCE) clustering strategy for [libcluster](https://hexdocs.pm/libcluster/readme.html). 
