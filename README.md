@@ -17,6 +17,10 @@ def deps do
 end
 ```
 
+## Requirements
+
+`libcluster_gce` requires Elixir 1.11+ & Erlang/OTP 22+
+
 ## Deployment Assumptions
 
 Clustering will only apply to nodes that are accessible via the [GCP internal DNS](https://cloud.google.com/compute/docs/internal-dns).

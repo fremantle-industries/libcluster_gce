@@ -6,7 +6,7 @@ defmodule ClusterGCE.MixProject do
       app: :libcluster_gce,
       description: "",
       version: "0.0.1",
-      elixir: "~> 1.7",
+      elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
